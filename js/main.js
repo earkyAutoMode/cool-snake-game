@@ -2,6 +2,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const scoreDisplay = document.getElementById('current-score');
 const highScoreDisplay = document.getElementById('high-score');
+const speedMultiplierDisplay = document.getElementById('speed-multiplier');
 const startScreen = document.getElementById('start-screen');
 const pauseScreen = document.getElementById('pause-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
@@ -11,6 +12,8 @@ const resumeBtn = document.getElementById('resume-btn');
 const restartBtn = document.getElementById('restart-btn');
 const pauseBtn = document.getElementById('pause-btn');
 const overlay = document.getElementById('overlay');
+const speedSlider = document.getElementById('speed-slider');
+const ingameSpeedSlider = document.getElementById('ingame-speed-slider');
 
 // 游戏常量配置
 const GRID_SIZE = 20;
@@ -29,13 +32,44 @@ let highScore = localStorage.getItem('snake-high-score') || 0;
 let gameRunning = false;
 let isPaused = false;
 let gameLoopTimeout;
-let speed = 150; // 毫秒/帧
+
+// 速度控制逻辑
+// 滑块值 1-10 映射到毫秒延迟 250ms - 50ms
+// 速度等级越小延迟越高，反之越低
+function mapSpeedLevelToInterval(level) {
+    // 线性映射：1->250ms, 10->50ms
+    return 250 - (level - 1) * 22.22;
+}
+
+let speedLevel = 5;
+let speedInterval = mapSpeedLevelToInterval(speedLevel);
 
 // 粒子系统
 let particles = [];
 
 // 初始化计分板显示
 highScoreDisplay.textContent = highScore;
+updateSpeedUI();
+
+// 同步滑块
+speedSlider.addEventListener('input', (e) => {
+    speedLevel = parseInt(e.target.value);
+    ingameSpeedSlider.value = speedLevel;
+    updateSpeedUI();
+});
+
+ingameSpeedSlider.addEventListener('input', (e) => {
+    speedLevel = parseInt(e.target.value);
+    speedSlider.value = speedLevel;
+    updateSpeedUI();
+});
+
+function updateSpeedUI() {
+    speedInterval = mapSpeedLevelToInterval(speedLevel);
+    // 速度倍率显示，以 5 级作为 1.0x 基准
+    const multiplier = (speedLevel / 5).toFixed(1);
+    speedMultiplierDisplay.textContent = multiplier;
+}
 
 // 游戏循环
 function gameLoop() {
@@ -44,7 +78,7 @@ function gameLoop() {
     update();
     draw();
 
-    gameLoopTimeout = setTimeout(gameLoop, speed);
+    gameLoopTimeout = setTimeout(gameLoop, speedInterval);
 }
 
 function update() {
@@ -71,12 +105,18 @@ function update() {
 
     // 碰撞检测：吃到食物
     if (head.x === food.x && head.y === food.y) {
-        score += 10;
+        // 动态得分逻辑：基础分 10 * 速度等级/5 (倍率)
+        const multiplier = speedLevel / 5;
+        score += Math.round(10 * multiplier);
         scoreDisplay.textContent = score;
+        
         createParticles(food.x * GRID_SIZE + GRID_SIZE / 2, food.y * GRID_SIZE + GRID_SIZE / 2);
         generateFood();
-        // 略微加速
-        if (speed > 80) speed -= 2;
+        
+        // 进食后的小幅自动加速机制（可选，此处保持原有逻辑或移除以完全由滑块控制）
+        // 如果想保留进食后变快，可以稍微提升 speedLevel 或直接减少间隔
+        // 这里选择保持由用户主要控制，进食后仅轻微提速（不改变滑块显示）
+        if (speedInterval > 40) speedInterval -= 1;
     } else {
         snake.pop();
     }
@@ -207,7 +247,8 @@ function startGame() {
     dx = 0; dy = -1;
     nextDx = 0; nextDy = -1;
     score = 0;
-    speed = 150;
+    // 每次开始重新从滑块获取速度
+    updateSpeedUI();
     scoreDisplay.textContent = score;
     gameRunning = true;
     isPaused = false;
