@@ -6,9 +6,10 @@ const startScreen = document.getElementById('start-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const finalScoreEl = document.getElementById('final-score');
 const restartBtn = document.getElementById('restart-btn');
+const cellSizeSelect = document.getElementById('cell-size-select');
 
 // Game Config
-let cellSize = 20;
+let cellSize = 15;
 let gridWidth, gridHeight;
 let snake = [];
 let food = { x: 0, y: 0 };
@@ -37,14 +38,24 @@ function init() {
     startScreen.addEventListener('click', startGame);
     restartBtn.addEventListener('click', startGame);
     
+    // Grid size control
+    cellSizeSelect.addEventListener('change', (e) => {
+        cellSize = parseInt(e.target.value);
+        resize();
+    });
+    // Stop event propagation to prevent game starting when clicking the select
+    cellSizeSelect.addEventListener('click', e => e.stopPropagation());
+    cellSizeSelect.addEventListener('touchstart', e => e.stopPropagation());
+    
     // Touch controls
     let touchStartX, touchStartY;
     document.addEventListener('touchstart', e => {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
-        if (!isGameRunning) startGame();
+        if (!isGameRunning && e.target !== cellSizeSelect) startGame();
     });
     document.addEventListener('touchend', e => {
+        if (!isGameRunning) return;
         const dx = e.changedTouches[0].clientX - touchStartX;
         const dy = e.changedTouches[0].clientY - touchStartY;
         if (Math.abs(dx) > Math.abs(dy)) {
