@@ -1,65 +1,83 @@
 :root {
+    --bg-color: #0d0d1a;
     --neon-blue: #00f3ff;
     --neon-pink: #ff00ff;
+    --neon-purple: #bc13fe;
     --neon-green: #39ff14;
     --neon-red: #ff3131;
-    --bg-dark: #0a0a0a;
+    --text-color: #fff;
+    --font-family: 'Orbitron', sans-serif;
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: var(--bg-dark);
-    font-family: 'Orbitron', sans-serif;
-    color: white;
-    height: 100vh;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: var(--font-family);
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
 }
 
-#game-container {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+.game-container {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-}
-
-canvas {
-    background: radial-gradient(circle, #1a1a1a 0%, #050505 100%);
-}
-
-#ui-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
+    gap: 20px;
     width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 10;
+    max-width: 600px;
+    padding: 20px;
+}
+
+.header {
+    text-align: center;
+    width: 100%;
+}
+
+.neon-text {
+    font-size: 2.5rem;
+    color: var(--neon-blue);
+    text-shadow: 0 0 5px var(--neon-blue),
+                 0 0 10px var(--neon-blue),
+                 0 0 20px var(--neon-blue);
+    margin-bottom: 10px;
+}
+
+.neon-text.color-red {
+    color: var(--neon-red);
+    text-shadow: 0 0 5px var(--neon-red),
+                 0 0 10px var(--neon-red),
+                 0 0 20px var(--neon-red);
 }
 
 .score-board {
-    position: absolute;
-    top: 20px;
-    left: 0;
-    width: 100%;
     display: flex;
     justify-content: space-around;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px var(--neon-blue);
-    color: var(--neon-blue);
+    width: 100%;
+    font-size: 1rem;
+    color: var(--neon-purple);
+    text-shadow: 0 0 5px var(--neon-purple);
+}
+
+.canvas-wrapper {
+    position: relative;
+    border: 3px solid var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-blue), inset 0 0 10px var(--neon-blue);
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+#gameCanvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
 }
 
 .overlay {
@@ -67,97 +85,63 @@ canvas {
     top: 0;
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    pointer-events: auto;
-    transition: opacity 0.5s ease;
+    border-radius: 5px;
+    z-index: 10;
+}
+
+#start-screen, #pause-screen, #game-over-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
 }
 
 .hidden {
     display: none !important;
 }
 
-.neon-text {
-    font-size: 4rem;
-    color: var(--neon-pink);
-    text-shadow: 0 0 10px var(--neon-pink), 0 0 20px var(--neon-pink), 0 0 40px var(--neon-pink);
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.neon-text-red {
-    font-size: 4rem;
-    color: var(--neon-red);
-    text-shadow: 0 0 10px var(--neon-red), 0 0 20px var(--neon-red), 0 0 40px var(--neon-red);
-    margin-bottom: 20px;
-}
-
-.settings {
-    margin-bottom: 30px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    font-size: 1rem;
-    color: var(--neon-blue);
-    text-shadow: 0 0 5px var(--neon-blue);
-}
-
-select {
-    background: transparent;
-    border: 1px solid var(--neon-blue);
-    color: var(--neon-blue);
-    padding: 8px 15px;
-    font-family: 'Orbitron', sans-serif;
-    outline: none;
-    cursor: pointer;
-    box-shadow: 0 0 5px var(--neon-blue);
-    text-transform: uppercase;
-    font-size: 0.9rem;
-}
-
-select option {
-    background: var(--bg-dark);
-    color: var(--neon-blue);
-}
-
-.blink {
+.neon-btn {
+    padding: 12px 24px;
+    font-family: var(--font-family);
     font-size: 1.2rem;
+    font-weight: bold;
     color: var(--neon-green);
-    text-shadow: 0 0 10px var(--neon-green);
-    animation: blink 1.5s infinite;
-}
-
-button {
-    margin-top: 30px;
-    padding: 15px 40px;
     background: transparent;
     border: 2px solid var(--neon-green);
-    color: var(--neon-green);
-    font-family: 'Orbitron', sans-serif;
-    font-size: 1.5rem;
+    border-radius: 5px;
     cursor: pointer;
-    text-shadow: 0 0 10px var(--neon-green);
-    box-shadow: 0 0 10px var(--neon-green), inset 0 0 10px var(--neon-green);
-    transition: all 0.3s ease;
+    text-transform: uppercase;
+    transition: 0.3s;
+    box-shadow: 0 0 5px var(--neon-green), inset 0 0 5px var(--neon-green);
 }
 
-button:hover {
+.neon-btn:hover {
     background: var(--neon-green);
-    color: black;
-    box-shadow: 0 0 30px var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 20px var(--neon-green);
 }
 
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+.neon-btn.small {
+    font-size: 0.8rem;
+    padding: 8px 16px;
+    border-width: 1.5px;
 }
 
-@media (max-width: 600px) {
-    .neon-text, .neon-text-red { font-size: 2.5rem; }
-    .score-board { font-size: 0.9rem; }
-    .settings { font-size: 0.8rem; }
-    select { font-size: 0.7rem; padding: 5px 10px; }
+.hint {
+    font-size: 0.8rem;
+    color: #888;
+}
+
+@media (max-width: 480px) {
+    .neon-text {
+        font-size: 1.8rem;
+    }
+    .game-container {
+        padding: 10px;
+    }
 }

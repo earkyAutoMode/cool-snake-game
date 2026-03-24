@@ -1,39 +1,45 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Neon Snake Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>炫酷霓虹贪吃蛇 - Cool Snake</title>
     <link rel="stylesheet" href="css/style.css">
+    <!-- 引入谷歌字体 -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="game-container">
-        <div id="ui-layer">
+    <div class="game-container">
+        <div class="header">
+            <h1 class="neon-text">NEON SNAKE</h1>
             <div class="score-board">
-                <div id="score">Score: 0</div>
-                <div id="high-score">High Score: 0</div>
-            </div>
-            <div id="start-screen" class="overlay">
-                <h1 class="neon-text">NEON SNAKE</h1>
-                <div class="settings">
-                    <label for="cell-size-select">Grid Size:</label>
-                    <select id="cell-size-select">
-                        <option value="10">Small (Precise)</option>
-                        <option value="15" selected>Medium (Standard)</option>
-                        <option value="20">Large (Easy)</option>
-                        <option value="30">Huge (Casual)</option>
-                    </select>
-                </div>
-                <p class="blink">Tap to Start / Press Space</p>
-            </div>
-            <div id="game-over-screen" class="overlay hidden">
-                <h1 class="neon-text-red">GAME OVER</h1>
-                <p id="final-score">Final Score: 0</p>
-                <button id="restart-btn">Restart</button>
+                <div class="score-item">得分: <span id="current-score">0</span></div>
+                <div class="score-item">最高分: <span id="high-score">0</span></div>
             </div>
         </div>
-        <canvas id="game-canvas"></canvas>
+
+        <div class="canvas-wrapper">
+            <canvas id="gameCanvas"></canvas>
+            <div id="overlay" class="overlay">
+                <div id="start-screen">
+                    <button id="start-btn" class="neon-btn">开始游戏</button>
+                    <p class="hint">使用方向键或 WASD 控制</p>
+                </div>
+                <div id="pause-screen" class="hidden">
+                    <h2 class="neon-text">已暂停</h2>
+                    <button id="resume-btn" class="neon-btn">继续游戏</button>
+                </div>
+                <div id="game-over-screen" class="hidden">
+                    <h2 class="neon-text color-red">游戏结束</h2>
+                    <p>最终得分: <span id="final-score">0</span></p>
+                    <button id="restart-btn" class="neon-btn">重新开始</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="pause-btn" class="neon-btn small">暂停</button>
+        </div>
     </div>
     <script src="js/main.js"></script>
 </body>
