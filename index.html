@@ -16,6 +16,9 @@
                 <div class="score-item">得分: <span id="current-score">0</span></div>
                 <div class="score-item">最高分: <span id="high-score">0</span></div>
             </div>
+            <div class="speed-board">
+                <div class="speed-item">当前倍率: <span id="speed-multiplier">1.0</span>x</div>
+            </div>
         </div>
 
         <div class="canvas-wrapper">
@@ -24,6 +27,10 @@
                 <div id="start-screen">
                     <button id="start-btn" class="neon-btn">开始游戏</button>
                     <p class="hint">使用方向键或 WASD 控制</p>
+                    <div class="speed-control-container">
+                        <label for="speed-slider" class="speed-label">初始速度调节</label>
+                        <input type="range" id="speed-slider" min="1" max="10" value="5" class="neon-slider">
+                    </div>
                 </div>
                 <div id="pause-screen" class="hidden">
                     <h2 class="neon-text">已暂停</h2>
@@ -39,6 +46,10 @@
 
         <div class="controls">
             <button id="pause-btn" class="neon-btn small">暂停</button>
+            <div class="ingame-speed-control">
+                <label for="ingame-speed-slider">速度:</label>
+                <input type="range" id="ingame-speed-slider" min="1" max="10" value="5" class="neon-slider small">
+            </div>
         </div>
     </div>
     <script src="js/main.js"></script>
